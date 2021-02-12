@@ -1,0 +1,1 @@
+FROM ghcr.io/linuxserver/docker-baseimage-guacgui
