@@ -1,1 +1,1 @@
-FROM ghcr.io/linuxserver/docker-baseimage-guacgui
+FROM ghcr.io/linuxserver/baseimage-guacgui
