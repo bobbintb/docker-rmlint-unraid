@@ -13,7 +13,7 @@ RUN \
  apt-get install -qy --no-install-recommends \
 	x11-apps && \
  echo "**** install rmlint ****" && \
- apt-get install -qy --no-install-recommends \
+ apt-get install -qy \
 	rmlint && \
  echo "**** clean up ****" && \
  rm -rf \
