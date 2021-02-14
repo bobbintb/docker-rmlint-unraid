@@ -33,7 +33,7 @@ RUN \
 	python3-sphinx \
 	python3-gi-cairo \
 	python3-nose \
-	pyxdg \
+	python-xdg \
 	gettext build-essential && \
  echo "**** install optional dependencies for more features ****" && \
  apt-get install -y --no-install-recommends \
