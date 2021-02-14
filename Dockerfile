@@ -10,10 +10,46 @@ ENV APPNAME="rmlint" UMASK_SET="022"
 
 RUN \
  echo "**** install runtime packages ****" && \
- apt-get update && \
+	apt-get update && \
+	apt-get install -y --no-install-recommends \
+	lxterminal \
+	nano \
+	wget \
+	openssh-client \
+	rsync \
+	ca-certificates \
+	xdg-utils \
+	htop \
+	tar \
+	xzip \
+	gzip \
+	bzip2 \
+	zip \
+	unzip && \
  echo "**** install rmlint ****" && \
- apt-get install -y \
-	rmlint &&\
+ apt-get install -y --no-install-recommends \
+	git \
+	scons \
+	python3-sphinx \
+	python3-gi-cairo \
+	python3-nose \
+	gettext build-essential && \
+ echo "**** install optional dependencies for more features ****" && \
+ apt-get install -y --no-install-recommends \
+	libelf-dev \
+	libglib2.0-dev \
+	libblkid-dev \
+	libjson-glib-1.0 \
+	libjson-glib-dev && \
+ echo "**** install optional dependencies for the GUI ****" && \
+ apt-get install -y --no-install-recommends \
+ 	python3-gi \
+	gir1.2-rsvg \
+	gir1.2-gtk-3.0 \
+	python3-cairo \
+	gir1.2-polkit-1.0 \
+	gir1.2-gtksource-3.0 \
+	sudo && \
  echo "**** cleanup ****" && \
  apt-get clean && \
  rm -rf \
