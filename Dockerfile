@@ -50,6 +50,14 @@ RUN \
 	gir1.2-polkit-1.0 \
 	gir1.2-gtksource-3.0 \
 	sudo && \
+ git clone https://github.com/sahib/rmlint.git && \
+ cd ./rmlint && \
+ scons config && \
+ scons DEBUG=1 && \
+ echo "**** Install (and build if necessary). For releases you can omit DEBUG=1 ****" && \
+ sudo scons DEBUG=1 --prefix=/usr install && \
+ rm -rf /var/lib/apt/lists && \
+ 
  echo "**** cleanup ****" && \
  apt-get clean && \
  rm -rf \
