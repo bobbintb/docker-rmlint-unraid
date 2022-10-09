@@ -50,6 +50,7 @@ RUN \
 	python3-cairo \
 	gir1.2-polkit-1.0 \
 	gir1.2-gtksource-3.0 \
+	dbus-x11 \
 	sudo && \
  git clone https://github.com/sahib/rmlint.git && \
  cd ./rmlint && \
