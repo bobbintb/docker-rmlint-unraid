@@ -15,16 +15,16 @@ jobs:
         run: |
           sudo apt update
           # Ubuntu-only:
-          sudo apt install software-properties-common && add-apt-repository universe
-          sudo apt install git scons pkgconf gettext build-essential
+          apt install software-properties-common && add-apt-repository universe
+          apt install git scons pkgconf gettext build-essential
           # Optional dependencies for more features:
-          sudo apt install libelf-dev libglib2.0-dev libblkid-dev libjson-glib-1.0-0 libjson-glib-dev
+          apt install libelf-dev libglib2.0-dev libblkid-dev libjson-glib-1.0-0 libjson-glib-dev
           # Optional dependencies for building documentation:
-          sudo apt install python3-sphinx python3-sphinx-bootstrap-theme
+          apt install python3-sphinx python3-sphinx-bootstrap-theme
           # Optional dependencies for the GUI:
-          sudo apt install python3-setuptools python3-gi-cairo gir1.2-gtksource-4 gir1.2-polkit-1.0 gir1.2-rsvg-2.0 python3-colorlog
+          apt install python3-setuptools python3-gi-cairo gir1.2-gtksource-4 gir1.2-polkit-1.0 gir1.2-rsvg-2.0 python3-colorlog
           # Optional dependancies for tests:
-          sudo apt install python3-pytest python3-psutil python3-xattr
+          apt install python3-pytest python3-psutil python3-xattr
           
       # - name: Release
       #   uses: softprops/action-gh-release@v2
