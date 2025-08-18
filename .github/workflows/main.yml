@@ -25,6 +25,10 @@ jobs:
           apt install -y python3-setuptools python3-gi-cairo gir1.2-gtksource-4 gir1.2-polkit-1.0 gir1.2-rsvg-2.0 python3-colorlog
           # Optional dependancies for tests:
           apt install -y python3-pytest python3-psutil python3-xattr
+          tag=$(curl -s https://api.github.com/repos/sahib/rmlint/releases/latest | jq -r .tag_name)
+          git clone --branch $tag --depth 1 https://github.com/sahib/rmlint.git
+          cd rmlint/
+          scons config
           
       # - name: Release
       #   uses: softprops/action-gh-release@v2
