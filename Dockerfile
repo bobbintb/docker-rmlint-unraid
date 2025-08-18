@@ -1,35 +1,36 @@
-FROM ghcr.io/linuxserver/baseimage-guacgui
+FROM ghcr.io/linuxserver/baseimage-selkies:ubuntunoble
 
 # set version label
 ARG BUILD_DATE
 ARG VERSION
+ARG RMLINT_VERSION
 LABEL build_version="Linuxserver.io version:- ${VERSION} Build-date:- ${BUILD_DATE}"
-LABEL maintainer="aptalca"
+LABEL maintainer="bobbintb"
 
-ENV APPNAME="rmlint" UMASK_SET="022"
-
-RUN \
- apt update -y&& \
- apt upgrade -y && \
- apt dist-upgrade -y && \
- apt autoremove -y && \
- apt install update-manager-core -y && \
- do-release-upgrade -f DistUpgradeViewNonInteractive
+# title
+ENV TITLE=rmlint \
+    NO_GAMEPAD=true
 
 RUN \
- echo "**** install rmlint ****" && \
- apt update && \
- apt install -y jq wget libjson-glib && \
- latest_tag=$(curl -s https://api.github.com/repos/bobbintb/docker-rmlint-unraid/releases/latest | jq -r .tag_name) && \
- wget "https://github.com/bobbintb/docker-rmlint-unraid/releases/latest/download/rmlint_${latest_tag#v}_amd64.deb" && \
- apt install ./rmlint*.deb && \
- rm -rf /var/lib/apt/lists && \
- echo "**** cleanup ****" && \
- apt-get clean && \
- rm -rf \
-	/tmp/* \
-	/var/lib/apt/lists/* \
-	/var/tmp/*
+  echo "**** install packages ****" && \
+  apt-get update && \
+  latest_tag=$(curl -s https://api.github.com/repos/bobbintb/docker-rmlint-unraid/releases/latest | jq -r .tag_name) && \
+  wget "https://github.com/bobbintb/docker-rmlint-unraid/releases/latest/download/rmlint_${latest_tag#v}_amd64.deb" && \
+  apt install ./rmlint*.deb && \
+
+  echo "**** cleanup ****" && \
+  apt-get autoclean && \
+  rm -rf \
+    /config/.cache \
+    /config/.launchpadlib \
+    /var/lib/apt/lists/* \
+    /var/tmp/* \
+    /tmp/*
 
 # add local files
-COPY root/ /
+COPY /root /
+
+# ports and volumes
+EXPOSE 8322
+
+VOLUME /config
