@@ -14,7 +14,7 @@ RUN \
  apt dist-upgrade -y && \
  apt autoremove -y && \
  apt install update-manager-core -y && \
- do-release-upgrade -y
+ do-release-upgrade
 
 RUN \
  echo "**** install rmlint ****" && \
