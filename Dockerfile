@@ -1,4 +1,4 @@
-FROM ghcr.io/linuxserver/baseimage-selkies:latest
+FROM ghcr.io/linuxserver/baseimage-selkies
 
 # set version label
 ARG BUILD_DATE
