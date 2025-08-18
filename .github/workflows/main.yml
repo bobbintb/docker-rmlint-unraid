@@ -12,7 +12,7 @@ jobs:
         run: |
           sudo apt update
           echo "**** install runtime packages ****"
-          apt install -y --no-install-recommends lxterminal \
+          sudo apt install -y --no-install-recommends lxterminal \
           nano \
           wget \
           openssh-client \
@@ -27,7 +27,7 @@ jobs:
           zip \
           unzip
           echo "**** install rmlint ****" && \
-          apt install -y --no-install-recommends \
+          sudo apt install -y --no-install-recommends \
           scons \
           python3-sphinx \
           python3-gi-cairo \
@@ -35,14 +35,14 @@ jobs:
           python-xdg \
           gettext build-essential
           echo "**** install optional dependencies for more features ****"
-          apt install -y --no-install-recommends \
+          sudo apt install -y --no-install-recommends \
           libelf-dev \
           libglib2.0-dev \
           libblkid-dev \
           libjson-glib-1.0 \
           libjson-glib-dev
           echo "**** install optional dependencies for the GUI ****"
-          apt install -y --no-install-recommends \
+          sudo apt install -y --no-install-recommends \
           python3-gi \
           gir1.2-rsvg \
           gir1.2-gtk-3.0 \
