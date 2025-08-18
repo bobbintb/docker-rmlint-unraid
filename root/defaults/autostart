@@ -1,1 +1,1 @@
-rmlint --gui
+/usr/bin/rmlint --gui
