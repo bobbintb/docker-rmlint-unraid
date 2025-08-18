@@ -26,10 +26,26 @@ jobs:
           # Optional dependancies for tests:
           apt install -y python3-pytest python3-psutil python3-xattr
           tag=$(curl -s https://api.github.com/repos/sahib/rmlint/releases/latest | jq -r .tag_name)
+          version="${tag#v}"
           git clone --branch $tag --depth 1 https://github.com/sahib/rmlint.git
           cd rmlint/
           scons config
-          
+          DESTDIR=$(pwd)/pkg_install scons --prefix=/usr/local install
+          pkg_name="rmlint_${version}_amd64"
+          mkdir -p rmlint_pkg/DEBIAN
+          cp -r pkg_install/* rmlint_pkg/usr
+          cat > rmlint_pkg/DEBIAN/control <<EOF
+          Package: rmlint
+          Version: $version
+          Section: utils
+          Priority: optional
+          Architecture: amd64
+          Maintainer: Your Name <you@example.com>
+          Description: rmlint compiled from source with GUI
+          EOF
+          dpkg-deb --build "$pkg_name"
+
+
       # - name: Release
       #   uses: softprops/action-gh-release@v2
       #   with:
