@@ -1,0 +1,22 @@
+name: rmlint Ubuntu build
+on:
+  workflow_dispatch:
+jobs:
+  package_and_update:
+    permissions: write-all
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Update apt
+        run: |
+          apt update
+          
+      # - name: Release
+      #   uses: softprops/action-gh-release@v2
+      #   with:
+      #     token: ${{ secrets.GITHUB_TOKEN }}
+      #     tag_name: v${{ env.VERSION }}
+      #     make_latest: true
+      #     files: |
+      #       *.deb
