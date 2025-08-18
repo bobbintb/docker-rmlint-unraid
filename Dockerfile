@@ -14,6 +14,7 @@ ENV TITLE=rmlint \
 RUN \
   echo "**** install packages ****" && \
   apt-get update && \
+  apt-get install -y --no-install-recommends wget jq && \
   latest_tag=$(curl -s https://api.github.com/repos/bobbintb/docker-rmlint-unraid/releases/latest | jq -r .tag_name) && \
   wget "https://github.com/bobbintb/docker-rmlint-unraid/releases/latest/download/rmlint_${latest_tag#v}_amd64.deb" && \
   apt install ./rmlint*.deb && \
