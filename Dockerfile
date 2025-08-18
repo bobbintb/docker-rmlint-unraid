@@ -9,12 +9,12 @@ LABEL maintainer="aptalca"
 ENV APPNAME="rmlint" UMASK_SET="022"
 
 RUN \
- apt update && \
+ apt update -y&& \
  apt upgrade -y && \
  apt dist-upgrade -y && \
  apt autoremove -y && \
- apt install update-manager-core && \
- do-release-upgrade
+ apt install update-manager-core -y && \
+ do-release-upgrade -y
 
 RUN \
  echo "**** install rmlint ****" && \
