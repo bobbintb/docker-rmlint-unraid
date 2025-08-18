@@ -34,6 +34,7 @@ jobs:
         run: |
           tag=$(curl -s https://api.github.com/repos/sahib/rmlint/releases/latest | jq -r .tag_name)
           version="${tag#v}"
+          echo "TAG=$tag" >> $GITHUB_ENV
           
           git clone --branch "$tag" --depth 1 https://github.com/sahib/rmlint.git
           cd rmlint/
@@ -66,7 +67,6 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          tag_name: v${{ env.VERSION }}
+          tag_name: ${{ env.TAG }}
           make_latest: true
-          files: |
-            *.deb
+          files: rmlint/rmlint_${{ env.VERSION }}_amd64/*.deb
