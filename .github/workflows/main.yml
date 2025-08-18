@@ -14,27 +14,43 @@ jobs:
       - name: Update apt
         run: |
           apt update
-          # Ubuntu-only:
+      - name: Install Ubuntu-only dependencies
+        run: |
           apt install -y software-properties-common && add-apt-repository universe
-          apt install -y git scons pkgconf gettext build-essential
-          # Optional dependencies for more features:
-          apt install -y libelf-dev libglib2.0-dev libblkid-dev libjson-glib-1.0-0 libjson-glib-dev jq
-          # Optional dependencies for building documentation:
+          apt install -y git scons pkgconf gettext build-essential jq
+      - name: Install optional dependencies for more features
+        run: |
+          apt install -y libelf-dev libglib2.0-dev libblkid-dev libjson-glib-1.0-0 libjson-glib-dev
+      - name: Install optional dependencies for building documentation
+        run: |
           apt install -y python3-sphinx python3-sphinx-bootstrap-theme
-          # Optional dependencies for the GUI:
+      - name: Install optional dependencies for the GUI
+        run: |
           apt install -y python3-setuptools python3-gi-cairo gir1.2-gtksource-4 gir1.2-polkit-1.0 gir1.2-rsvg-2.0 python3-colorlog
-          # Optional dependancies for tests:
+      - name: Install optional dependancies for tests
+        run: |
           apt install -y python3-pytest python3-psutil python3-xattr
+      - name: Build
+        run: |
           tag=$(curl -s https://api.github.com/repos/sahib/rmlint/releases/latest | jq -r .tag_name)
           version="${tag#v}"
-          git clone --branch $tag --depth 1 https://github.com/sahib/rmlint.git
+          
+          git clone --branch "$tag" --depth 1 https://github.com/sahib/rmlint.git
           cd rmlint/
           scons config
-          DESTDIR=$(pwd)/pkg_install scons --prefix=/usr/local install
+          
+          # Install everything into a temporary folder
+          install_dir=$(pwd)/rmlint_install
+          scons --prefix="$install_dir" install
+          
+          # Prepare .deb folder
           pkg_name="rmlint_${version}_amd64"
-          mkdir -p rmlint_pkg/DEBIAN
-          cp -r pkg_install/* rmlint_pkg/usr
-          cat > rmlint_pkg/DEBIAN/control <<EOF
+          mkdir -p "$pkg_name"/DEBIAN
+          mkdir -p "$pkg_name"/usr
+          cp -r "$install_dir"/* "$pkg_name"/usr
+          
+          # Create control file
+          cat > "$pkg_name"/DEBIAN/control <<EOF
           Package: rmlint
           Version: $version
           Section: utils
@@ -43,9 +59,9 @@ jobs:
           Maintainer: Your Name <you@example.com>
           Description: rmlint compiled from source with GUI
           EOF
+          
+          # Build the .deb
           dpkg-deb --build "$pkg_name"
-
-
       # - name: Release
       #   uses: softprops/action-gh-release@v2
       #   with:
