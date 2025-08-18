@@ -63,10 +63,12 @@ jobs:
           
           # Build the .deb
           dpkg-deb --build "$pkg_name"
+          deb_file=$(realpath rmlint_${version}_amd64.deb)
+          echo "DEB_FILE=$deb_file" >> $GITHUB_ENV
       - name: Release
         uses: softprops/action-gh-release@v2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           tag_name: ${{ env.TAG }}
           make_latest: true
-          files: rmlint/rmlint_${{ env.VERSION }}_amd64/*.deb
+          files: ${{ env.DEB_FILE }}
