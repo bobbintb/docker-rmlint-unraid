@@ -5,6 +5,9 @@ jobs:
   package_and_update:
     permissions: write-all
     runs-on: ubuntu-latest
+    container:
+      image: ubuntu:latest
+      options: --privileged
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
