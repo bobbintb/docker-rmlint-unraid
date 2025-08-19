@@ -75,16 +75,16 @@ jobs:
           depends="gtk+3.0 py3-gobject3 py3-cairo"
           makedepends="scons git pkgconf gettext"
           source="rmlint-\$pkgver.tar.gz::https://github.com/sahib/rmlint/archive/refs/tags/v\$pkgver.tar.gz"
-            builddir="$srcdir/$pkgname-$pkgver"
+            builddir="\$srcdir/\$pkgname-\$pkgver"
           
           build() {
-              cd "$builddir"
+              cd "\$builddir"
               scons config
           }
           
           package() {
-              cd "$builddir"
-              scons --prefix="$pkgdir/usr/local" install
+              cd "\$builddir"
+              scons --prefix="\$pkgdir/usr/local" install
           }
           EOF
           
