@@ -58,13 +58,10 @@ jobs:
           version="${tag#v}"
           echo "TAG=$tag"
           
-          # Create src directory under builder's srcdir
+          # Prepare source directory and download tarball
           mkdir -p /home/builder/src/rmlint/src
+          curl -L -o /home/builder/src/rmlint/src/rmlint-$version.tar.gz "https://github.com/sahib/rmlint/archive/refs/tags/v$version.tar.gz"
           chown -R builder:builder /home/builder/src/rmlint
-          
-          # Download tarball directly into src
-          cd /home/builder/src/rmlint/src
-          curl -L -o rmlint-$version.tar.gz "https://github.com/sahib/rmlint/archive/refs/tags/v$version.tar.gz"
           
           # Create APKBUILD
           cat > /home/builder/src/rmlint/APKBUILD <<EOF
@@ -78,12 +75,10 @@ jobs:
           depends="gtk+3.0 py3-gobject3 py3-cairo"
           makedepends="scons git pkgconf gettext"
           
-          source="rmlint-$version.tar.gz::https://github.com/sahib/rmlint/archive/refs/tags/v$version.tar.gz"
-          sha512sums="SKIP"
+          source="file://rmlint-$version.tar.gz"
           
           build() {
-              cd "\$srcdir/rmlint-$version"
-              scons
+              true
           }
           
           package() {
@@ -97,6 +92,9 @@ jobs:
           echo "PACKAGER_PRIVKEY=\"$builder_key\"" >> /home/builder/.abuild/abuild.conf
           chown builder:builder /home/builder/.abuild/abuild.conf
           chmod 600 /home/builder/.abuild/abuild.conf
+          
+          # Generate checksums
+          sudo -u builder bash -c "cd /home/builder/src/rmlint && abuild checksum"
           
           # Build the APK
           sudo -u builder bash -c "cd /home/builder/src/rmlint && abuild -r -F"
