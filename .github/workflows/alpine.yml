@@ -84,7 +84,7 @@ jobs:
           
           package() {
               cd "\$builddir"
-              scons --prefix="\$pkgdir/usr/local" install
+              scons --prefix="\$pkgdir/usr" install
           }
           EOF
           
