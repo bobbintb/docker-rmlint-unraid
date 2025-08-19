@@ -78,6 +78,7 @@ jobs:
             builddir="$srcdir/$pkgname-$pkgver"
           
           build() {
+              mv "$srcdir/v$version.tar.gz" "$srcdir/rmlint-$version.tar.gz"
               cd "$builddir"
               scons config
           }
