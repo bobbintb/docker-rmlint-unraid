@@ -77,15 +77,13 @@ jobs:
           license="GPL-3.0-or-later"
           depends="gtk+3.0 py3-gobject3 py3-cairo"
           makedepends="scons git pkgconf gettext"
-          source="https://github.com/sahib/rmlint/archive/refs/tags/v\$pkgver.tar.gz"
           
           build() {
-              cd "\$srcdir/rmlint-\$pkgver"
-              scons config
+              true  # skip building, already done
           }
           
           package() {
-              cd "\$srcdir/rmlint-\$pkgver"
+              cd "\$srcdir/rmlint"
               scons --prefix="\$pkgdir/usr" install
           }
           EOF
@@ -98,7 +96,7 @@ jobs:
           chown builder:builder /home/builder/.abuild/abuild.conf
           chmod 600 /home/builder/.abuild/abuild.conf
           
-          # Build the package as builder
+          # Build the package as builder (skip fetch/checksum)
           sudo -u builder bash -c "cd /home/builder/src/rmlint && abuild -r -F"
           
           # Locate the resulting APK
