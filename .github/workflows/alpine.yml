@@ -21,7 +21,8 @@ jobs:
 
       - name: Install optional dependencies for building documentation
         run: |
-          apk add --no-cache python3 py3-sphinx py3-sphinx-bootstrap-theme
+          apk add --no-cache python3 py3-sphinx 
+          #py3-sphinx-bootstrap-theme
 
       - name: Install optional dependencies for the GUI
         run: |
@@ -30,7 +31,8 @@ jobs:
       - name: Install optional dependencies for tests
         run: |
           apk add --no-cache py3-pytest py3-psutil py3-xattr
-
+          apk add --no-cache py3-pip
+          pip install sphinx-bootstrap-theme
       - name: Build
         run: |
           #!/bin/sh
