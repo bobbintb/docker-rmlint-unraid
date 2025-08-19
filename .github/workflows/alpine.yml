@@ -74,11 +74,10 @@ jobs:
           license="GPL-3.0-or-later"
           depends="gtk+3.0 py3-gobject3 py3-cairo"
           makedepends="scons git pkgconf gettext"
-          source="https://github.com/sahib/rmlint/archive/refs/tags/v\$pkgver.tar.gz"
+          source="rmlint-$pkgver.tar.gz::https://github.com/sahib/rmlint/archive/refs/tags/v\$pkgver.tar.gz"
             builddir="$srcdir/$pkgname-$pkgver"
           
           build() {
-              mv "$srcdir/v$version.tar.gz" "$srcdir/rmlint-$version.tar.gz"
               cd "$builddir"
               scons config
           }
