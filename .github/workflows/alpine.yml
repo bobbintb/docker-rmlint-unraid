@@ -99,7 +99,7 @@ jobs:
           chmod 600 /home/builder/.abuild/abuild.conf
           
           # Build the package as builder
-          sudo -u builder bash -c "cd /home/builder/src/rmlint && abuild -r"
+          sudo -u builder bash -c "cd /home/builder/src/rmlint && abuild -r -F"
           
           # Locate the resulting APK
           apk_file=$(find /home/builder/packages/ -name "*.apk" | head -n1)
