@@ -43,7 +43,6 @@ jobs:
           apk add --no-cache abuild sudo scons git pkgconf gettext fakeroot
           
           adduser -D builder
-          addgroup abuild
           adduser builder abuild
 
           mkdir -p /home/builder/src /home/builder/.abuild
