@@ -63,11 +63,10 @@ jobs:
           chown builder:builder /home/builder/src/rmlint
 
           cd /home/builder/src/rmlint
-          tarball="rmlint-$version.tar.gz"
-          curl -L -o "$tarball" "https://github.com/sahib/rmlint/archive/refs/tags/v$version.tar.gz"
-
+          mkdir -p src
+          curl -L -o src/rmlint-$version.tar.gz "https://github.com/sahib/rmlint/archive/refs/tags/v$version.tar.gz"
+          
           cat > /home/builder/src/rmlint/APKBUILD <<EOF
-          # Maintainer: Your Name <you@example.com>
           pkgname=rmlint
           pkgver=$version
           pkgrel=0
@@ -76,17 +75,17 @@ jobs:
           arch="x86_64"
           license="GPL-3.0-or-later"
           depends="gtk+3.0 py3-gobject3 py3-cairo"
-          makedepends="scons git pkgconf gettext curl jq"
-          source="file://$tarball"
+          makedepends="scons git pkgconf gettext"
+          
+          source="file://src/rmlint-$version.tar.gz"
           sha512sums="SKIP"
           
           build() {
-              cd "\$srcdir/rmlint-\$pkgver"
-              scons config
+              true
           }
           
           package() {
-              cd "\$srcdir/rmlint-\$pkgver"
+              cd "\$srcdir/rmlint-$version"
               scons --prefix="\$pkgdir/usr" install
           }
           EOF
