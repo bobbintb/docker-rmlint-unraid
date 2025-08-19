@@ -50,6 +50,6 @@ RUN \
 COPY /root /
 
 # ports and volumes
-EXPOSE 8322
+EXPOSE 8322 8323
 
 VOLUME /config
