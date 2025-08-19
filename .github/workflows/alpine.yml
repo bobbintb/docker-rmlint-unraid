@@ -58,13 +58,15 @@ jobs:
           version="${tag#v}"
           echo "TAG=$tag"
           
-          # Create source directory and download tarball
-          mkdir -p /home/builder/src/rmlint
-          chown builder:builder /home/builder/src/rmlint
-          cd /home/builder/src/rmlint
+          # Create src directory under builder's srcdir
+          mkdir -p /home/builder/src/rmlint/src
+          chown -R builder:builder /home/builder/src/rmlint
+          
+          # Download tarball directly into src
+          cd /home/builder/src/rmlint/src
           curl -L -o rmlint-$version.tar.gz "https://github.com/sahib/rmlint/archive/refs/tags/v$version.tar.gz"
           
-          # Create APKBUILD pointing to local tarball
+          # Create APKBUILD
           cat > /home/builder/src/rmlint/APKBUILD <<EOF
           pkgname=rmlint
           pkgver=$version
