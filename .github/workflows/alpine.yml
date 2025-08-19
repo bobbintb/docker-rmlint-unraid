@@ -74,6 +74,7 @@ jobs:
           depends="gtk+3.0 py3-gobject3 py3-cairo"
           makedepends="scons git pkgconf gettext curl jq"
           source="https://github.com/sahib/rmlint/archive/refs/tags/v\$pkgver.tar.gz"
+          sha512sums="SKIP"
           
           build() {
               cd "\$srcdir/rmlint-\$pkgver"
