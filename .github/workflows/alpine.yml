@@ -1,4 +1,4 @@
-name: rmlint Ubuntu build
+name: rmlint Alpine build
 on:
   workflow_dispatch:
 jobs:
