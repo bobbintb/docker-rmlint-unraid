@@ -40,11 +40,11 @@ jobs:
       - name: Build
         run: |
           #!/bin/sh
-          apk add --no-cache abuild sudo scons git pkgconf gettext fakeroot
+          apk add --no-cache abuild sudo scons git pkgconf gettext fakeroot curl jq
           
           adduser -D builder
           adduser builder abuild
-
+          
           mkdir -p /home/builder/src /home/builder/.abuild
           chown -R builder:builder /home/builder
           
@@ -58,11 +58,7 @@ jobs:
           version="${tag#v}"
           echo "TAG=$tag"
           
-          # Clone source
-          git clone --branch "$tag" --depth 1 https://github.com/sahib/rmlint.git /home/builder/src/rmlint
-          chown -R builder:builder /home/builder/src/rmlint
-          
-          # Create APKBUILD pointing to local source
+          # Create APKBUILD using official tarball
           cat > /home/builder/src/rmlint/APKBUILD <<EOF
           # Maintainer: Your Name <you@example.com>
           pkgname=rmlint
@@ -73,14 +69,16 @@ jobs:
           arch="x86_64"
           license="GPL-3.0-or-later"
           depends="gtk+3.0 py3-gobject3 py3-cairo"
-          makedepends="scons git pkgconf gettext"
+          makedepends="scons git pkgconf gettext curl jq"
+          source="https://github.com/sahib/rmlint/archive/refs/tags/v\$pkgver.tar.gz"
           
           build() {
-              true  # already built manually or via scons
+              cd "\$srcdir/rmlint-\$pkgver"
+              scons config
           }
           
           package() {
-              cd "$srcdir"
+              cd "\$srcdir/rmlint-\$pkgver"
               scons --prefix="\$pkgdir/usr" install
           }
           EOF
@@ -91,7 +89,7 @@ jobs:
           chown builder:builder /home/builder/.abuild/abuild.conf
           chmod 600 /home/builder/.abuild/abuild.conf
           
-          # Build the APK skipping fetch/checksum
+          # Build the APK (downloads tarball automatically)
           sudo -u builder bash -c "cd /home/builder/src/rmlint && abuild -r -F"
           
           # Locate the resulting APK
