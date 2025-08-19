@@ -59,6 +59,9 @@ jobs:
           echo "TAG=$tag"
           
           # Create APKBUILD using official tarball
+          mkdir -p /home/builder/src/rmlint
+          chown builder:builder /home/builder/src/rmlint
+          
           cat > /home/builder/src/rmlint/APKBUILD <<EOF
           # Maintainer: Your Name <you@example.com>
           pkgname=rmlint
