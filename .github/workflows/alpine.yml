@@ -40,32 +40,23 @@ jobs:
       - name: Build
         run: |
           #!/bin/sh
-          # Install build tools
           apk add --no-cache abuild sudo scons git pkgconf gettext fakeroot
           
-          # Create builder user
           adduser -D builder
-          
-          # Prepare builder home
-          mkdir -p /home/builder/src
-          mkdir -p /home/builder/.abuild
+          mkdir -p /home/builder/src /home/builder/.abuild
           chown -R builder:builder /home/builder
           
-          # Generate abuild key as root, then move to builder home
           sudo abuild-keygen -a -i -n
           mv /root/.abuild/* /home/builder/.abuild/
           chown -R builder:builder /home/builder/.abuild
           
-          # Fetch latest rmlint release
           tag=$(curl -s https://api.github.com/repos/sahib/rmlint/releases/latest | jq -r .tag_name)
           version="${tag#v}"
           echo "TAG=$tag"
           
-          # Clone source
           git clone --branch "$tag" --depth 1 https://github.com/sahib/rmlint.git /home/builder/src/rmlint
           chown -R builder:builder /home/builder/src/rmlint
           
-          # Create APKBUILD
           cat > /home/builder/src/rmlint/APKBUILD <<EOF
           # Maintainer: Your Name <you@example.com>
           pkgname=rmlint
@@ -77,29 +68,27 @@ jobs:
           license="GPL-3.0-or-later"
           depends="gtk+3.0 py3-gobject3 py3-cairo"
           makedepends="scons git pkgconf gettext"
+          source="https://github.com/sahib/rmlint/archive/refs/tags/v\$pkgver.tar.gz"
+          sha512sums="SKIP"
           
           build() {
-              true  # skip building, already done
+              cd "\$srcdir/rmlint-\$pkgver"
+              scons config
           }
           
           package() {
-              cd "\$srcdir/rmlint"
+              cd "\$srcdir/rmlint-\$pkgver"
               scons --prefix="\$pkgdir/usr" install
           }
           EOF
           
-          # Detect the builder key
           builder_key=$(ls /home/builder/.abuild/*.rsa | head -n1)
-          
-          # Configure abuild to use it
           echo "PACKAGER_PRIVKEY=\"$builder_key\"" >> /home/builder/.abuild/abuild.conf
           chown builder:builder /home/builder/.abuild/abuild.conf
           chmod 600 /home/builder/.abuild/abuild.conf
           
-          # Build the package as builder (skip fetch/checksum)
-          sudo -u builder bash -c "cd /home/builder/src/rmlint && abuild -r -F"
+          sudo -u builder bash -c "cd /home/builder/src/rmlint && abuild -r"
           
-          # Locate the resulting APK
           apk_file=$(find /home/builder/packages/ -name "*.apk" | head -n1)
           echo "APK_FILE=$apk_file"
       - name: Release
