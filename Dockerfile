@@ -25,10 +25,7 @@ RUN \
   librsvg2-common \
   gir1.2-gtksource-4 \
   python3-cairo \
-  python3-gi-cairo \
-  xfce4-terminal \
-  libqt5widgets5 \
-  zlib1g && \
+  python3-gi-cairo && \
   latest_tag=$(curl -s https://api.github.com/repos/bobbintb/docker-rmlint-unraid/releases/latest | jq -r .tag_name) && \
   wget "https://github.com/bobbintb/docker-rmlint-unraid/releases/latest/download/rmlint_${latest_tag#v}_amd64.deb" && \
   apt install ./rmlint*.deb && \
@@ -50,7 +47,6 @@ RUN \
 COPY /root /
 
 # ports and volumes
-EXPOSE 8322
-EXPOSE 8323
+EXPOSE 8322 8323
 
 VOLUME /config
