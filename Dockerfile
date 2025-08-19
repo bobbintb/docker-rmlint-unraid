@@ -10,8 +10,8 @@ LABEL maintainer="bobbintb"
 # title
 ENV TITLE=rmlint \
     NO_GAMEPAD=true \
-    CUSTOM_PORT=8032 \
-    CUSTOM_HTTPS_PORT=8033
+    CUSTOM_PORT=8322 \
+    CUSTOM_HTTPS_PORT=8323
 
 RUN \
   echo "**** install packages ****" && \
