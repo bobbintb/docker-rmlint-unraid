@@ -61,7 +61,11 @@ jobs:
           # Create APKBUILD using official tarball
           mkdir -p /home/builder/src/rmlint
           chown builder:builder /home/builder/src/rmlint
-          
+
+          cd /home/builder/src/rmlint
+          tarball="rmlint-$version.tar.gz"
+          curl -L -o "$tarball" "https://github.com/sahib/rmlint/archive/refs/tags/v$version.tar.gz"
+
           cat > /home/builder/src/rmlint/APKBUILD <<EOF
           # Maintainer: Your Name <you@example.com>
           pkgname=rmlint
@@ -74,6 +78,7 @@ jobs:
           depends="gtk+3.0 py3-gobject3 py3-cairo"
           makedepends="scons git pkgconf gettext curl jq"
           source="https://github.com/sahib/rmlint/archive/refs/tags/v\$pkgver.tar.gz"
+          source="file://$tarball"
           sha512sums="SKIP"
           
           build() {
