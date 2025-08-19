@@ -35,7 +35,7 @@ jobs:
       - name: Install optional dependencies for tests
         run: |
           apk add --no-cache py3-pytest py3-psutil
-          apk add --no-cache py3-pip
+          apk add --no-cache py3-pip python3-dev build-base
           pip install --break-system-packages sphinx-bootstrap-theme pyxattr
       - name: Build
         run: |
