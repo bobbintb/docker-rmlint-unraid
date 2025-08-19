@@ -1,1 +1,1 @@
-/usr/bin/rmlint --gui
+QDIRSTAT_DESKTOP="Xfce" /usr/bin/rmlint --gui
