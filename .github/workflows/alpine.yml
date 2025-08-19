@@ -1,0 +1,98 @@
+name: rmlint Ubuntu build
+on:
+  workflow_dispatch:
+jobs:
+  package_and_update:
+    permissions: write-all
+    runs-on: ubuntu-latest
+    container:
+      image: alpine:latest
+      options: --privileged
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Update apt
+        run: |
+          apt update
+      - name: Install Ubuntu-only dependencies
+        run: |
+          apt install -y software-properties-common && add-apt-repository universe
+          apt install -y git scons pkgconf gettext build-essential jq
+      - name: Install optional dependencies for more features
+        run: |
+          apt install -y libelf-dev libglib2.0-dev libblkid-dev libjson-glib-1.0-0 libjson-glib-dev
+      - name: Install optional dependencies for building documentation
+        run: |
+          apt install -y python3-sphinx python3-sphinx-bootstrap-theme
+      - name: Install optional dependencies for the GUI
+        run: |
+          apt install -y python3-setuptools python3-gi-cairo gir1.2-gtksource-4 gir1.2-polkit-1.0 gir1.2-rsvg-2.0 python3-colorlog
+      - name: Install optional dependancies for tests
+        run: |
+          apt install -y python3-pytest python3-psutil python3-xattr
+      - name: Build
+        run: |
+          #!/bin/sh
+          # Install build tools
+          apk add --no-cache abuild sudo scons git pkgconf gettext fakeroot
+          
+          # Create builder user
+          adduser -D builder
+          
+          # Prepare builder home
+          mkdir -p /home/builder/src
+          mkdir -p /home/builder/.abuild
+          chown -R builder:builder /home/builder
+          
+          # Generate abuild key as root, then move to builder home
+          sudo abuild-keygen -a -i -n
+          mv /root/.abuild/* /home/builder/.abuild/
+          chown -R builder:builder /home/builder/.abuild
+          
+          # Fetch latest rmlint release
+          tag=$(curl -s https://api.github.com/repos/sahib/rmlint/releases/latest | jq -r .tag_name)
+          version="${tag#v}"
+          echo "TAG=$tag"
+          
+          # Clone source
+          git clone --branch "$tag" --depth 1 https://github.com/sahib/rmlint.git /home/builder/src/rmlint
+          chown -R builder:builder /home/builder/src/rmlint
+          
+          # Create APKBUILD
+          cat > /home/builder/src/rmlint/APKBUILD <<EOF
+          # Maintainer: Your Name <you@example.com>
+          pkgname=rmlint
+          pkgver=$version
+          pkgrel=0
+          pkgdesc="rmlint compiled from source with GUI"
+          url="https://github.com/sahib/rmlint"
+          arch="x86_64"
+          license="GPL-3.0-or-later"
+          depends="gtk+3.0 py3-gobject3 py3-cairo"
+          makedepends="scons git pkgconf gettext"
+          source="https://github.com/sahib/rmlint/archive/refs/tags/v\$pkgver.tar.gz"
+          
+          build() {
+              cd "\$srcdir/rmlint-\$pkgver"
+              scons config
+          }
+          
+          package() {
+              cd "\$srcdir/rmlint-\$pkgver"
+              scons --prefix="\$pkgdir/usr" install
+          }
+          EOF
+          
+          # Build the package as builder
+          sudo -u builder bash -c "cd /home/builder/src/rmlint && abuild -r"
+          
+          # Locate the resulting APK
+          apk_file=$(find /home/builder/packages/ -name "*.apk" | head -n1)
+          echo "APK_FILE=$apk_file"
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag_name: ${{ env.TAG }}
+          make_latest: true
+          files: ${{ env.APK_FILE }}
