@@ -10,8 +10,8 @@ LABEL maintainer="bobbintb"
 # title
 ENV TITLE=rmlint \
     NO_GAMEPAD=true \
-    CUSTOM_PORT=8322 \
-    CUSTOM_HTTPS_PORT=8323
+    CUSTOM_PORT=8321 \
+    CUSTOM_HTTPS_PORT=8322
 
 RUN \
   echo "**** install packages ****" && \
@@ -47,6 +47,6 @@ RUN \
 COPY /root /
 
 # ports and volumes
-EXPOSE 8322 8323
+EXPOSE 8321 8322
 
 VOLUME /config
