@@ -74,18 +74,18 @@ jobs:
           license="GPL-3.0-or-later"
           depends="gtk+3.0 py3-gobject3 py3-cairo"
           makedepends="scons git pkgconf gettext"
-          
-          source="file://src/rmlint-$version.tar.gz"
-          
+          source="https://github.com/sahib/rmlint/archive/refs/tags/v${pkgver}.tar.gz"
+          builddir="$srcdir/$pkgname-$pkgver"
           build() {
-              true
-          }
-          
-          package() {
-              cd "\$srcdir/rmlint-$version"
-              scons --prefix="\$pkgdir/usr" install
-          }
-          EOF
+            cd "$builddir"
+            scons config
+            }
+              
+              package() {
+                  cd "\$srcdir/rmlint-$version"
+                  scons --prefix="\$pkgdir/usr" install
+              }
+              EOF
           
           # Configure abuild to use builder key
           builder_key=$(ls /home/builder/.abuild/*.rsa | head -n1)
