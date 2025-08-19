@@ -40,17 +40,18 @@ jobs:
       - name: Build
         run: |
           #!/bin/sh
-          apk add --no-cache abuild sudo scons git pkgconf gettext fakeroot jq
+          apk add --no-cache abuild sudo scons git pkgconf gettext fakeroot
           
           adduser -D builder
           adduser builder abuild
-          
-          mkdir -p /home/builder/src /home/builder/.abuild /home/builder/packages
+
+          mkdir -p /home/builder/src /home/builder/.abuild
           chown -R builder:builder /home/builder
           
-          # Generate abuild key as builder
-          sudo -u builder mkdir -p /home/builder/.abuild
-          sudo -u builder abuild-keygen -a -i -n
+          # Generate abuild key
+          sudo abuild-keygen -a -i -n
+          mv /root/.abuild/* /home/builder/.abuild/
+          chown -R builder:builder /home/builder/.abuild
           
           # Fetch latest rmlint release
           tag=$(curl -s https://api.github.com/repos/sahib/rmlint/releases/latest | jq -r .tag_name)
@@ -58,7 +59,8 @@ jobs:
           echo "TAG=$tag"
           
           # Clone source
-          sudo -u builder git clone --branch "$tag" --depth 1 https://github.com/sahib/rmlint.git /home/builder/src/rmlint
+          git clone --branch "$tag" --depth 1 https://github.com/sahib/rmlint.git /home/builder/src/rmlint
+          chown -R builder:builder /home/builder/src/rmlint
           
           # Create APKBUILD pointing to local source
           cat > /home/builder/src/rmlint/APKBUILD <<EOF
@@ -73,14 +75,12 @@ jobs:
           depends="gtk+3.0 py3-gobject3 py3-cairo"
           makedepends="scons git pkgconf gettext"
           
-          source="."
-          
           build() {
-              true
+              true  # already built manually or via scons
           }
           
           package() {
-              cd "\$srcdir"
+              cd "\$srcdir/rmlint"
               scons --prefix="\$pkgdir/usr" install
           }
           EOF
