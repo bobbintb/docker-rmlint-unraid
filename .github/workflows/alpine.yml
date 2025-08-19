@@ -77,12 +77,13 @@ jobs:
           license="GPL-3.0-or-later"
           depends="gtk+3.0 py3-gobject3 py3-cairo"
           makedepends="scons git pkgconf gettext"
+          options="!check"
           
-          source="file://rmlint-$version.tar.gz"
-          sha512sums="SKIP"
+          source="rmlint-$version.tar.gz::https://github.com/sahib/rmlint/archive/refs/tags/v$version.tar.gz"
           
           build() {
-              true
+              cd "\$srcdir/rmlint-$version"
+              scons
           }
           
           package() {
