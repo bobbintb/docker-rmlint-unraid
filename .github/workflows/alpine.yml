@@ -22,7 +22,7 @@ jobs:
       - name: Install optional dependencies for building documentation
         run: |
           apk add --no-cache python3 py3-sphinx 
-          #py3-sphinx-bootstrap-theme
+          # py3-sphinx-bootstrap-theme
 
       - name: Install optional dependencies for the GUI
         run: |
