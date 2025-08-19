@@ -58,14 +58,13 @@ jobs:
           version="${tag#v}"
           echo "TAG=$tag"
           
-          # Create APKBUILD using official tarball
+          # Create source directory and download tarball
           mkdir -p /home/builder/src/rmlint
           chown builder:builder /home/builder/src/rmlint
-
           cd /home/builder/src/rmlint
-          mkdir -p src
-          curl -L -o src/rmlint-$version.tar.gz "https://github.com/sahib/rmlint/archive/refs/tags/v$version.tar.gz"
+          curl -L -o rmlint-$version.tar.gz "https://github.com/sahib/rmlint/archive/refs/tags/v$version.tar.gz"
           
+          # Create APKBUILD pointing to local tarball
           cat > /home/builder/src/rmlint/APKBUILD <<EOF
           pkgname=rmlint
           pkgver=$version
@@ -79,7 +78,6 @@ jobs:
           
           source="file://rmlint-$version.tar.gz"
           sha512sums="SKIP"
-
           
           build() {
               true
@@ -97,7 +95,7 @@ jobs:
           chown builder:builder /home/builder/.abuild/abuild.conf
           chmod 600 /home/builder/.abuild/abuild.conf
           
-          # Build the APK (downloads tarball automatically)
+          # Build the APK
           sudo -u builder bash -c "cd /home/builder/src/rmlint && abuild -r -F"
           
           # Locate the resulting APK
