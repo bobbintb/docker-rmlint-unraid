@@ -77,8 +77,9 @@ jobs:
           depends="gtk+3.0 py3-gobject3 py3-cairo"
           makedepends="scons git pkgconf gettext"
           
-          source="file://src/rmlint-$version.tar.gz"
+          source="file://rmlint-$version.tar.gz"
           sha512sums="SKIP"
+
           
           build() {
               true
