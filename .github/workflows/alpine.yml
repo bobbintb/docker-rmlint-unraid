@@ -80,7 +80,7 @@ jobs:
           }
           
           package() {
-              cd "\$srcdir/rmlint"
+              cd "$srcdir"
               scons --prefix="\$pkgdir/usr" install
           }
           EOF
