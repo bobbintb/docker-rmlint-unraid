@@ -77,7 +77,6 @@ jobs:
           license="GPL-3.0-or-later"
           depends="gtk+3.0 py3-gobject3 py3-cairo"
           makedepends="scons git pkgconf gettext curl jq"
-          source="https://github.com/sahib/rmlint/archive/refs/tags/v\$pkgver.tar.gz"
           source="file://$tarball"
           sha512sums="SKIP"
           
