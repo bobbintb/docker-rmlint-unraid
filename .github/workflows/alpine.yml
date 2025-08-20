@@ -112,4 +112,5 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           tag_name: ${{ env.TAG }}
           make_latest: true
+          overwrite: true
           files: ${{ env.APK_FILE }}
