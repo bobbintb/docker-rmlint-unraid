@@ -56,7 +56,7 @@ jobs:
           # Fetch latest rmlint release
           tag=$(curl -s https://api.github.com/repos/sahib/rmlint/releases/latest | jq -r .tag_name)
           version="${tag#v}"
-          echo "TAG=$tag"
+          echo "TAG=$tag" >> $GITHUB_ENV
           
           # Create source directory and download tarball
           mkdir -p /home/builder/src/rmlint/src
@@ -104,7 +104,7 @@ jobs:
           
           # Locate the resulting APK
           apk_file=$(find /home/builder/packages/ -name "*.apk" | head -n1)
-          echo "APK_FILE=$apk_file"
+          echo "APK_FILE=$apk_file" >> $GITHUB_ENV
 
       - name: Release
         uses: softprops/action-gh-release@v2
